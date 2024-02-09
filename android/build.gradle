@@ -80,9 +80,12 @@ android {
 repositories {
   mavenCentral()
   google()
+
+  maven { url "https://packagecloud.io/priv/1b3938cf97552569bbc509eb51eccef17ae34977d23cb654/stone/pos-android/maven2" }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
+def stone_sdk_version = "4.8.4"
 
 dependencies {
   // For < 0.71, this will be from the local maven repo
@@ -90,5 +93,11 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-}
 
+  implementation "br.com.stone:stone-sdk:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-ingenico:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-positivo:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-gertec:$stone_sdk_version"
+}

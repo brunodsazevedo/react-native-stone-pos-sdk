@@ -55,6 +55,7 @@ react {
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
 def enableProguardInReleaseBuilds = false
+def stone_sdk_version = "4.8.4"
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -108,6 +109,13 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+
+    implementation "br.com.stone:stone-sdk:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid-ingenico:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid-positivo:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid-gertec:$stone_sdk_version"
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
