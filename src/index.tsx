@@ -17,6 +17,50 @@ const StonePosSdk = NativeModules.StonePosSdk
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return StonePosSdk.multiply(a, b);
+export function initSDK(
+  appName: String,
+  qrCodeProviderKey: String = '',
+  qrCodeProviderAuthorization: String = ''
+): Promise<boolean> {
+  if (!qrCodeProviderAuthorization || !qrCodeProviderKey) {
+    console.warn(
+      'You forgot to provide qrCodeProviderKey or qrCodeProviderAuthorization, PIX will NOT work'
+    );
+  }
+
+  return StonePosSdk.initSDK(
+    appName,
+    qrCodeProviderKey,
+    qrCodeProviderAuthorization
+  );
+}
+
+export function activateCode(
+  stoneCode: String,
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = true
+): Promise<boolean> {
+  return StonePosSdk.activateCode(
+    stoneCode,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI
+  );
+}
+
+export function deactivateCode(
+  stoneCode: String,
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = true,
+  ignoreLastStoneCodeCheck: Boolean = false
+): Promise<boolean> {
+  return StonePosSdk.deactivateCode(
+    stoneCode,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    ignoreLastStoneCodeCheck
+  );
 }
