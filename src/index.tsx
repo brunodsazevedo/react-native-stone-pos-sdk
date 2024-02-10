@@ -1,5 +1,13 @@
 import { NativeModules, Platform } from 'react-native';
 
+import type {
+  MifareKeyType,
+  ProgressEventName,
+  ReceiptType,
+  TransactionSetupType,
+  TransactionType,
+} from './types';
+
 const LINKING_ERROR =
   `The package 'react-native-stone-pos-sdk' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -62,5 +70,131 @@ export function deactivateCode(
     dialogTitle,
     useDefaultUI,
     ignoreLastStoneCodeCheck
+  );
+}
+
+export function makeTransaction(
+  {
+    installmentCount = 1,
+    installmentHasInterest = false,
+    ...restOfTransactionSetup
+  }: TransactionSetupType,
+  progressCallbackEventName: ProgressEventName = 'MAKE_TRANSACTION_PROGRESS'
+): Promise<TransactionType> {
+  return StonePosSdk.makeTransaction(
+    {
+      installmentCount,
+      installmentHasInterest,
+      ...restOfTransactionSetup,
+    },
+    progressCallbackEventName
+  );
+}
+
+export function printReceiptInPOSPrinter(
+  receiptType: ReceiptType,
+  transactionAtk: String,
+  isReprint: Boolean = false,
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = true,
+  progressCallbackEventName: ProgressEventName = 'PRINT_RECEIPT_IN_POS_PRINTER_PROGRESS'
+): Promise<boolean> {
+  return StonePosSdk.printReceiptInPOSPrinter(
+    receiptType,
+    transactionAtk,
+    isReprint,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
+  );
+}
+
+export function mifareDetectCard(
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = false,
+  progressCallbackEventName: ProgressEventName = 'MIFARE_PROGRESS'
+): Promise<String[]> {
+  return StonePosSdk.mifareDetectCard(
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
+  );
+}
+
+export function mifareAuthenticateSector(
+  keyType: MifareKeyType,
+  sector: number,
+  key: String = 'FFFFFFFFFFFF',
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = false,
+  progressCallbackEventName: ProgressEventName = 'MIFARE_PROGRESS'
+): Promise<boolean> {
+  return StonePosSdk.mifareAuthenticateSector(
+    keyType,
+    sector,
+    key,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
+  );
+}
+
+export function mifareReadBlock(
+  keyType: MifareKeyType,
+  sector: number,
+  block: number,
+  key: String = 'FFFFFFFFFFFF',
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = false,
+  progressCallbackEventName: ProgressEventName = 'MIFARE_PROGRESS'
+): Promise<String[]> {
+  if (block < 0 || block > 3) {
+    throw Error('Your block must be between 0-3 inclusive');
+  }
+
+  return StonePosSdk.mifareReadBlock(
+    keyType,
+    sector,
+    block,
+    key,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
+  );
+}
+
+export function mifareWriteBlock(
+  keyType: MifareKeyType,
+  sector: number,
+  block: number,
+  data: String,
+  key: String = 'FFFFFFFFFFFF',
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: Boolean = false,
+  progressCallbackEventName: ProgressEventName = 'MIFARE_PROGRESS'
+): Promise<String[]> {
+  if (block < 0 || block > 3) {
+    throw Error('Your block must be between 0-3 inclusive');
+  }
+
+  return StonePosSdk.mifareWriteBlock(
+    keyType,
+    sector,
+    block,
+    data,
+    key,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
   );
 }

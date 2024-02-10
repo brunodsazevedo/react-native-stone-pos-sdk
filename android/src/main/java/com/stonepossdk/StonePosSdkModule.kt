@@ -1,10 +1,7 @@
 package com.stonepossdk
 
 import android.content.Context
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.*
 import stone.application.StoneStart
 import stone.user.UserModel
 import stone.utils.Stone
@@ -49,11 +46,25 @@ class StonePosSdkModule(reactContext: ReactApplicationContext) :
       return if (currentUserList != null) currentUserList!!.size else 0
     }
 
+    fun hasPixKeysProvided(): Boolean {
+      return !(STONE_QRCODE_PROVIDER_ID.isNullOrEmpty() || STONE_QRCODE_AUTHORIZATION.isNullOrEmpty())
+    }
+
     const val NAME = "StonePosSdk"
   }
 
   override fun getName(): String {
     return NAME
+  }
+
+  @ReactMethod
+  fun addListener(@Suppress("UNUSED_PARAMETER") type: String?) {
+    // Keep: Required for RN built in Event Emitter Calls.
+  }
+
+  @ReactMethod
+  fun removeListeners(@Suppress("UNUSED_PARAMETER") type: Int?) {
+    // Keep: Required for RN built in Event Emitter Calls.
   }
 
   override fun getConstants(): Map<String, Any> {
@@ -93,6 +104,9 @@ class StonePosSdkModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  /**
+   * Activation and Deactivation Methods
+   */
   @ReactMethod
   fun activateCode(
     stoneCode: String,
@@ -139,4 +153,434 @@ class StonePosSdkModule(reactContext: ReactApplicationContext) :
       promise.reject(e)
     }
   }
+
+  @ReactMethod
+  fun getActivatedCodes(promise: Promise) {
+    try {
+      ActivateDeactivateCode(reactApplicationContext, currentActivity).executeGetActivatedCodes(
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  /**
+   * Transactions fetching methods
+   */
+
+  @ReactMethod
+  fun getAllTransactionsOrderByIdDesc(promise: Promise) {
+    try {
+      GetTransactions(reactApplicationContext, currentActivity).executeActionOrderByIdDesc(promise)
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun getLastTransaction(promise: Promise) {
+    try {
+      GetTransactions(reactApplicationContext, currentActivity).executeActionGetLastTransaction(
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun findTransactionWithAuthorizationCode(authorizationCode: String, promise: Promise) {
+    try {
+      GetTransactions(
+        reactApplicationContext,
+        currentActivity
+      ).executeFindTransactionWithAuthorizationCode(authorizationCode, promise)
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun findTransactionWithInitiatorTransactionKey(
+    initiatorTransactionKey: String,
+    promise: Promise
+  ) {
+    try {
+      GetTransactions(
+        reactApplicationContext,
+        currentActivity
+      ).executeFindTransactionWithInitiatorTransactionKey(initiatorTransactionKey, promise)
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun findTransactionWithId(transactionId: Int, promise: Promise) {
+    try {
+      GetTransactions(reactApplicationContext, currentActivity).executeFindTransactionWithId(
+        transactionId,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  /**
+   * Transaction Executors
+   */
+
+  @ReactMethod
+  fun reversePendingTransactions(
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      ReversePendingTransactions(reactApplicationContext, currentActivity).executeAction(
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun voidTransaction(
+    transactionAtk: String,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      VoidTransaction(reactApplicationContext, currentActivity).executeAction(
+        transactionAtk,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun captureTransaction(
+    transactionAtk: String,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      CaptureTransaction(reactApplicationContext, currentActivity).executeAction(
+        transactionAtk,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun makeTransaction(
+    transactionSetup: ReadableMap,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      MakeTransaction(reactApplicationContext, currentActivity).executeAction(
+        transactionSetup,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun cancelRunningTaskMakeTransaction(
+    promise: Promise
+  ) {
+    try {
+      MakeTransaction(reactApplicationContext, currentActivity).cancelAction(
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun sendTransactionReceiptMail(
+    transactionAtk: String,
+    receiptType: String,
+    toContact: ReadableArray,
+    fromContact: ReadableMap,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      SendTransactionReceiptMail(reactApplicationContext, currentActivity).executeAction(
+        transactionAtk,
+        receiptType,
+        toContact,
+        fromContact,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun fetchTransactionsForCard(
+    pinpadMacAddress: String?,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      FetchTransactionsForCard(reactApplicationContext, currentActivity).executeAction(
+        pinpadMacAddress,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  /**
+   * Pinpad Methods
+   */
+
+  @ReactMethod
+  fun displayMessageInPinPad(
+    pinpadMessage: String,
+    pinpadMacAddress: String?,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      DisplayMessageInPinPad(reactApplicationContext, currentActivity).executeAction(
+        pinpadMessage,
+        pinpadMacAddress,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun connectToPinPad(
+    pinpadName: String,
+    pinpadMacAddress: String,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      ConnectToPinPad(reactApplicationContext, currentActivity).executeAction(
+        pinpadName,
+        pinpadMacAddress,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  /**
+   * Print methods
+   */
+  @ReactMethod
+  fun printReceiptInPOSPrinter(
+    receiptType: String,
+    transactionAtk: String,
+    isReprint: Boolean,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      PrintReceiptInPOSPrinter(reactApplicationContext, currentActivity).executeAction(
+        receiptType,
+        transactionAtk,
+        isReprint,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun printHTMLInPOSPrinter(
+    htmlContent: String,
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      PrintHtmlInPOSPrinter(reactApplicationContext, currentActivity).executeAction(
+        htmlContent,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun mifareDetectCard(
+    dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      MifarePOSExecutor(reactApplicationContext, currentActivity).executeDetectCard(
+        dialogMessage, dialogTitle, useDefaultUI, progressCallbackEventName, promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun mifareAuthenticateSector(
+    keyType: Int, sector: Int, key: String, dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      MifarePOSExecutor(reactApplicationContext, currentActivity).executeAuthenticateSector(
+        keyType,
+        key,
+        sector,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun mifareReadBlock(
+    keyType: Int, sector: Int, block: Int,
+    key: String, dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      MifarePOSExecutor(reactApplicationContext, currentActivity).executeReadBlock(
+        keyType,
+        key,
+        sector,
+        block,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun mifareWriteBlock(
+    keyType: Int, sector: Int, block: Int,
+    data: String,
+    key: String, dialogMessage: String?,
+    dialogTitle: String?,
+    useDefaultUI: Boolean,
+    progressCallbackEventName: String,
+    promise: Promise
+  ) {
+    try {
+      MifarePOSExecutor(reactApplicationContext, currentActivity).executeWriteBlock(
+        keyType,
+        key,
+        sector,
+        block,
+        data,
+        dialogMessage,
+        dialogTitle,
+        useDefaultUI,
+        progressCallbackEventName,
+        promise
+      )
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
 }
