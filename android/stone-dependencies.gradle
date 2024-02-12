@@ -1,0 +1,12 @@
+def stone_sdk_version = "4.8.4"
+
+dependencies {
+  implementation "br.com.stone:stone-sdk:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-ingenico:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-positivo:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
+  implementation "br.com.stone:stone-sdk-posandroid-gertec:$stone_sdk_version"
+
+  implementation 'com.izettle:html2bitmap:1.9'
+}

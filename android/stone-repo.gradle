@@ -1,0 +1,14 @@
+allprojects {
+  String token = rootProject.ext.has('STONE_POS_SDK_PACKAGE_CLOUD_TOKEN') ? rootProject.ext.get('STONE_POS_SDK_PACKAGE_CLOUD_TOKEN') : (
+    project.properties.containsKey('STONE_POS_SDK_PACKAGE_CLOUD_TOKEN') ?
+      project.properties['STONE_POS_SDK_PACKAGE_CLOUD_TOKEN'] : System.getenv('STONE_POS_SDK_PACKAGE_CLOUD_TOKEN')
+  )
+
+  if ( token == null || token.isEmpty() ) {
+    throw new RuntimeException("You need to set the STONE_POS_SDK_PACKAGE_CLOUD_TOKEN either in gradle.properties or in your env")
+  }
+
+  repositories {
+    maven { url "https://packagecloud.io/priv/${token}/stone/pos-android/maven2" }
+  }
+}
