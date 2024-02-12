@@ -80,8 +80,6 @@ android {
 repositories {
   mavenCentral()
   google()
-
-  maven { url "https://packagecloud.io/priv/1b3938cf97552569bbc509eb51eccef17ae34977d23cb654/stone/pos-android/maven2" }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
