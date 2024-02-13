@@ -8,6 +8,7 @@ import {
   makeTransaction,
   printReceiptInPOSPrinter,
   mifareDetectCard,
+  voidTransaction,
 } from 'react-native-stone-pos-sdk';
 
 export default function App() {
@@ -46,7 +47,7 @@ export default function App() {
         installmentCount: 1,
         installmentHasInterest: false,
         capture: true,
-        useDefaultUI: false,
+        useDefaultUI: true,
       });
 
       if (transactionStatus.transactionStatus === 'APPROVED') {
@@ -68,6 +69,8 @@ export default function App() {
 
         console.log(JSON.stringify(transactionStatus, null, 1));
       }
+
+      console.log(transactionStatus);
     } catch (error) {
       console.log(error);
     }
@@ -119,6 +122,15 @@ export default function App() {
     }
   }
 
+  async function handleVoidTransaction() {
+    try {
+      const voidPaymentTest = await voidTransaction('14441080999957');
+      console.log(voidPaymentTest);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <View className="flex-1 pt-6 px-6">
       <ScrollView className="space-y-4">
@@ -145,6 +157,13 @@ export default function App() {
           <Button
             title="Pagamento de cartão de débito"
             onPress={handleMakeTransactionWithDebitCard}
+          />
+        </View>
+
+        <View>
+          <Button
+            title="Estorno de pagamento"
+            onPress={handleVoidTransaction}
           />
         </View>
 

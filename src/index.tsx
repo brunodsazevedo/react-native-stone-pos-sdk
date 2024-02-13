@@ -1,12 +1,14 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, DeviceEventEmitter } from 'react-native';
 
 import type {
+  MakeTransactionProgressProps,
   MifareKeyType,
   ProgressEventName,
   ReceiptType,
   TransactionSetupType,
   TransactionType,
 } from './types';
+import { useEffect, useState } from 'react';
 
 const LINKING_ERROR =
   `The package 'react-native-stone-pos-sdk' doesn't seem to be linked. Make sure: \n\n` +
@@ -197,4 +199,77 @@ export function mifareWriteBlock(
     useDefaultUI,
     progressCallbackEventName
   );
+}
+
+export async function voidTransaction(
+  transactionAtk: String,
+  dialogMessage: String | null = null,
+  dialogTitle: String | null = null,
+  useDefaultUI: boolean = true,
+  progressCallbackEventName: ProgressEventName = 'VOID_TRANSACTION_PROGRESS'
+): Promise<TransactionType> {
+  return StonePosSdk.voidTransaction(
+    transactionAtk,
+    dialogMessage,
+    dialogTitle,
+    useDefaultUI,
+    progressCallbackEventName
+  );
+}
+
+export function useMakeTransactionProgress() {
+  const [transactionProgress, setTransactionProgress] =
+    useState<MakeTransactionProgressProps | null>(null);
+
+  function onClearTransactionProgress() {
+    setTransactionProgress(null);
+  }
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('MAKE_TRANSACTION_PROGRESS', (event) => {
+      setTransactionProgress(event);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners();
+    };
+  }, []);
+
+  return { transactionProgress, onClearTransactionProgress };
+}
+
+export function useVoidTransactionProgress() {
+  const [voidTransactionProgress, setVoidTransactionProgress] = useState<any>();
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('VOID_TRANSACTION_PROGRESS', (event) => {
+      setVoidTransactionProgress(event);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners();
+    };
+  }, []);
+
+  return voidTransactionProgress;
+}
+
+export function useMifareProgress() {
+  const [mifareProgress, setMifareProgress] = useState<any>();
+
+  function onClearMifareProgress() {
+    setMifareProgress(null);
+  }
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('MIFARE_PROGRESS', (event) => {
+      setMifareProgress(event);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners();
+    };
+  }, []);
+
+  return { mifareProgress, onClearMifareProgress };
 }

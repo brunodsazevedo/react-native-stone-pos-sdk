@@ -148,3 +148,16 @@ export enum MifareKeyType {
   TypeA = 0,
   TypeB = 1,
 }
+
+export type MakeTransactionProgressProps = {
+  initiatorTransactionKey: string;
+  messageFromAuthorize: null;
+  qrCode: string | null;
+  status:
+    | 'TRANSACTION_SENDING'
+    | 'TRANSACTION_WAITING_CARD'
+    | 'TRANSACTION_WAITING_PASSWORD'
+    | 'TRANSACTION_WAITING_QRCODE_SCAN'
+    | string;
+  transactionStatus: string;
+};
