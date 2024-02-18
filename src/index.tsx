@@ -7,6 +7,7 @@ import type {
   ReceiptType,
   TransactionSetupType,
   TransactionType,
+  UserModelType,
 } from './types';
 import { useEffect, useState } from 'react';
 
@@ -57,6 +58,10 @@ export function activateCode(
     dialogTitle,
     useDefaultUI
   );
+}
+
+export function getActivatedCodes(): Promise<UserModelType> {
+  return StonePosSdk.getActivatedCodes();
 }
 
 export function deactivateCode(
