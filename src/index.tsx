@@ -60,7 +60,7 @@ export function activateCode(
   );
 }
 
-export function getActivatedCodes(): Promise<UserModelType> {
+export function getActivatedCodes(): Promise<UserModelType[]> {
   return StonePosSdk.getActivatedCodes();
 }
 
