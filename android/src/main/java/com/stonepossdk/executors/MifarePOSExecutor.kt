@@ -1,6 +1,7 @@
 package com.stonepossdk.executors
 
 import android.app.Activity
+import android.util.Log
 import br.com.stone.posandroid.hal.api.mifare.MifareKeyType
 import br.com.stone.posandroid.providers.PosMifareProvider
 import com.facebook.react.bridge.Promise
@@ -115,6 +116,8 @@ class MifarePOSExecutor(
       useDefaultUI,
       progressCallbackEventName = progressCallbackEventName
     ) { mifareProvider ->
+      println(mifareProvider.)
+
       promise.resolve(
         writableArrayFrom(
           mifareProvider.cardUUID.map {

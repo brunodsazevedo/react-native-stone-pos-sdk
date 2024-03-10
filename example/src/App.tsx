@@ -115,7 +115,7 @@ export default function App() {
 
   async function handleDetectNFCCard() {
     try {
-      const cardId = await mifareDetectCard();
+      const cardId = await mifareDetectCard('teste', 'teste title', true);
       console.log(cardId);
     } catch (error) {
       console.log(error);
