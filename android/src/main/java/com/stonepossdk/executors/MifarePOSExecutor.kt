@@ -1,7 +1,6 @@
 package com.stonepossdk.executors
 
 import android.app.Activity
-import android.util.Log
 import br.com.stone.posandroid.hal.api.mifare.MifareKeyType
 import br.com.stone.posandroid.providers.PosMifareProvider
 import com.facebook.react.bridge.Promise
@@ -27,6 +26,18 @@ class MifarePOSExecutor(
     } else {
       throw Exception("Hex String needs to be divisible by 2")
     }
+  }
+
+  private fun byteArrayToHexString(byteArray: ByteArray): String {
+    val hexChars = "0123456789ABCDEF"
+    val hexString = StringBuilder(2 * byteArray.size)
+    for (byte in byteArray) {
+      val firstDigit = (byte.toInt() and 0xF0).ushr(4)
+      val secondDigit = byte.toInt() and 0x0F
+      hexString.append(hexChars[firstDigit])
+      hexString.append(hexChars[secondDigit])
+    }
+    return hexString.toString()
   }
 
   private fun activateCardExecuteBlockAndPowerOff(
@@ -116,7 +127,8 @@ class MifarePOSExecutor(
       useDefaultUI,
       progressCallbackEventName = progressCallbackEventName
     ) { mifareProvider ->
-      println(mifareProvider.)
+      println(mifareProvider.cardUUID)
+      println(byteArrayToHexString(mifareProvider.cardUUID))
 
       promise.resolve(
         writableArrayFrom(
