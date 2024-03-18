@@ -28,18 +28,6 @@ class MifarePOSExecutor(
     }
   }
 
-  private fun byteArrayToHexString(byteArray: ByteArray): String {
-    val hexChars = "0123456789ABCDEF"
-    val hexString = StringBuilder(2 * byteArray.size)
-    for (byte in byteArray) {
-      val firstDigit = (byte.toInt() and 0xF0).ushr(4)
-      val secondDigit = byte.toInt() and 0x0F
-      hexString.append(hexChars[firstDigit])
-      hexString.append(hexChars[secondDigit])
-    }
-    return hexString.toString()
-  }
-
   private fun activateCardExecuteBlockAndPowerOff(
     promise: Promise,
     dialogMessage: String? = null,
@@ -127,8 +115,11 @@ class MifarePOSExecutor(
       useDefaultUI,
       progressCallbackEventName = progressCallbackEventName
     ) { mifareProvider ->
-      println(mifareProvider.cardUUID)
-      println(byteArrayToHexString(mifareProvider.cardUUID))
+      val cardUUID = mifareProvider.cardUUID
+      val cardUUIDString = cardUUID.contentToString()
+
+      println("cardUUID => $cardUUID")
+      println("cardUUIDString => $cardUUIDString")
 
       promise.resolve(
         writableArrayFrom(

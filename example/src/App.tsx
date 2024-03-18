@@ -8,6 +8,8 @@ import {
   makeTransaction,
   printReceiptInPOSPrinter,
   mifareDetectCard,
+  mifareReadBlock,
+  MifareKeyType,
   voidTransaction,
 } from 'react-native-stone-pos-sdk';
 
@@ -122,6 +124,20 @@ export default function App() {
     }
   }
 
+  async function handleReadCardNFC() {
+    try {
+      const cardId = await mifareReadBlock(
+        MifareKeyType.TypeB,
+        1,
+        1,
+        'FFFFFFFFFFFF'
+      );
+      console.log(cardId);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function handleVoidTransaction() {
     try {
       const voidPaymentTest = await voidTransaction('14441080999957');
@@ -169,6 +185,10 @@ export default function App() {
 
         <View>
           <Button title="Detectar Cartão NFC" onPress={handleDetectNFCCard} />
+        </View>
+
+        <View>
+          <Button title="Ler Cartão NFC" onPress={handleReadCardNFC} />
         </View>
       </ScrollView>
     </View>

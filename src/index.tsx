@@ -28,6 +28,8 @@ const StonePosSdk = NativeModules.StonePosSdk
       }
     );
 
+export { MifareKeyType } from './types';
+
 export function initSDK(
   appName: String,
   qrCodeProviderKey: String = '',
