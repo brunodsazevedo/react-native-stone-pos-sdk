@@ -1,12 +1,84 @@
-def stone_sdk_version = "4.8.4"
+def stone_sdk_version = "4.8.7"
 
-dependencies {
-  implementation "br.com.stone:stone-sdk:$stone_sdk_version"
-  implementation "br.com.stone:stone-sdk-posandroid:$stone_sdk_version"
-  implementation "br.com.stone:stone-sdk-posandroid-ingenico:$stone_sdk_version"
-  implementation "br.com.stone:stone-sdk-posandroid-positivo:$stone_sdk_version"
-  implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
-  implementation "br.com.stone:stone-sdk-posandroid-gertec:$stone_sdk_version"
+String posMode = rootProject.ext.has('STONE_POS_MODE') ? rootProject.ext.get('STONE_POS_MODE') : (
+  project.properties.containsKey('STONE_POS_MODE') ?
+    project.properties['STONE_POS_MODE'] : (System.getenv('STONE_POS_MODE') ?  System.getenv('STONE_POS_MODE') : 'pos')
+)
 
-  implementation 'com.izettle:html2bitmap:1.9'
+String expoPosMode = rootProject.ext.has('EXPO_PUBLIC_STONE_POS_MODE') ? rootProject.ext.get('EXPO_PUBLIC_STONE_POS_MODE') : (
+  project.properties.containsKey('EXPO_PUBLIC_STONE_POS_MODE') ?
+    project.properties['EXPO_PUBLIC_STONE_POS_MODE'] : (System.getenv('EXPO_PUBLIC_STONE_POS_MODE') ?  System.getenv('EXPO_PUBLIC_STONE_POS_MODE') : 'pos')
+)
+
+String includeIngenico = rootProject.ext.has('STONE_POS_INCLUDE_INGENICO') ? rootProject.ext.get('STONE_POS_INCLUDE_INGENICO') : (
+  project.properties.containsKey('STONE_POS_INCLUDE_INGENICO') ?
+    project.properties['STONE_POS_INCLUDE_INGENICO'] : (System.getenv('STONE_POS_INCLUDE_INGENICO') ? System.getenv('STONE_POS_INCLUDE_INGENICO') : 'true')
+)
+
+String expoIncludeIngenico = rootProject.ext.has('EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO') ? rootProject.ext.get('EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO') : (
+  project.properties.containsKey('EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO') ?
+    project.properties['EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO'] : (System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO') ? System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_INGENICO') : 'true')
+)
+
+String includeSunmi = rootProject.ext.has('STONE_POS_INCLUDE_SUNMI') ? rootProject.ext.get('STONE_POS_INCLUDE_SUNMI') : (
+  project.properties.containsKey('STONE_POS_INCLUDE_SUNMI') ?
+    project.properties['STONE_POS_INCLUDE_SUNMI'] : (System.getenv('STONE_POS_INCLUDE_SUNMI') ? System.getenv('STONE_POS_INCLUDE_SUNMI') : 'true')
+)
+
+String expoIncludeSunmi = rootProject.ext.has('EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI') ? rootProject.ext.get('EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI') : (
+  project.properties.containsKey('EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI') ?
+    project.properties['EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI'] : (System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI') ? System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_SUNMI') : 'true')
+)
+
+String includeGertec = rootProject.ext.has('STONE_POS_INCLUDE_GERTEC') ? rootProject.ext.get('STONE_POS_INCLUDE_GERTEC') : (
+  project.properties.containsKey('STONE_POS_INCLUDE_GERTEC') ?
+    project.properties['STONE_POS_INCLUDE_GERTEC'] : (System.getenv('STONE_POS_INCLUDE_GERTEC') ? System.getenv('STONE_POS_INCLUDE_GERTEC') : 'true')
+)
+
+String expoIncludeGertec = rootProject.ext.has('EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC') ? rootProject.ext.get('EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC') : (
+  project.properties.containsKey('EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC') ?
+    project.properties['EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC'] : (System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC') ? System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_GERTEC') : 'true')
+)
+
+String includePositivo = rootProject.ext.has('STONE_POS_INCLUDE_POSITIVO') ? rootProject.ext.get('STONE_POS_INCLUDE_POSITIVO') : (
+  project.properties.containsKey('STONE_POS_INCLUDE_POSITIVO') ?
+    project.properties['STONE_POS_INCLUDE_POSITIVO'] : (System.getenv('STONE_POS_INCLUDE_POSITIVO') ? System.getenv('STONE_POS_INCLUDE_POSITIVO') : 'true')
+)
+
+String expoIncludePositivo = rootProject.ext.has('EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO') ? rootProject.ext.get('EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO') : (
+  project.properties.containsKey('EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO') ?
+    project.properties['EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO'] : (System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO') ? System.getenv('EXPO_PUBLIC_STONE_POS_INCLUDE_POSITIVO') : 'true')
+)
+
+if (posMode.equalsIgnoreCase('pos') || expoPosMode.equalsIgnoreCase('pos')) {
+  dependencies {
+    implementation "br.com.stone:stone-sdk:$stone_sdk_version"
+    implementation "br.com.stone:stone-sdk-posandroid:$stone_sdk_version"
+
+    implementation 'com.izettle:html2bitmap:1.9'
+  }
+
+  if (includeIngenico.equalsIgnoreCase('true') || expoIncludeIngenico.equalsIgnoreCase('true')) {
+    dependencies {
+      implementation "br.com.stone:stone-sdk-posandroid-ingenico:$stone_sdk_version"
+    }
+  }
+
+  if (includeSunmi.equalsIgnoreCase('true') || expoIncludeSunmi.equalsIgnoreCase('true')) {
+    dependencies {
+      implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
+    }
+  }
+
+  if (includeGertec.equalsIgnoreCase('true') || expoIncludeGertec.equalsIgnoreCase('true')) {
+    dependencies {
+      implementation "br.com.stone:stone-sdk-posandroid-sunmi:$stone_sdk_version"
+    }
+  }
+
+  if (includePositivo.equalsIgnoreCase('true') || expoIncludePositivo.equalsIgnoreCase('true')) {
+    dependencies {
+      implementation "br.com.stone:stone-sdk-posandroid-positivo:$stone_sdk_version"
+    }
+  }
 }
